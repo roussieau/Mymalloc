@@ -1,6 +1,6 @@
 /*********************************
  *                               *
- *   My_alloc.c                  *
+ *   My_alloc.c    			     *
  *   Implementation de Malloc,   * 
  *   Free et Calloc              *
  *   Author : Julian Roussieau   *
@@ -51,7 +51,7 @@ void *myalloc(size_t size) {
 	size = calcul(size); // On verifie qu'on est bien sur un multiple de 32 bits
 	if(first == NULL) { //Lors du premier appel, on initialise le heap 
 		first = (header *)sbrk(size);
-		end = sbrk(0);
+		end_heap = sbrk(0);
 		first->size = size;
 		first->zero = 0;
 		first->alloc = 0;

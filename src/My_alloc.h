@@ -1,2 +1,2 @@
-void *myalloc(size_t size);
-void free(void *ptr);
+void *myalloc(size_t);
+void free(void *);
