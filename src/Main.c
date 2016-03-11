@@ -8,4 +8,5 @@ int main(int argc, const char *argv[])
 	int *test = (int *)myalloc(sizeof(int));
 	*test = 42;
 	printf("la valeur est : %d \n", *test);
+	return EXIT_SUCCESS;
 } 
