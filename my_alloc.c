@@ -1,3 +1,13 @@
+/*********************************
+ *                               *
+ *   My_alloc.c    			     *
+ *   Implementation de Malloc,   * 
+ *   Free et Calloc              *
+ *   Author : Julian Roussieau   *
+ *            Damien Vaneberck   *
+ *                               *
+ * *******************************/
+
 #include<stdlib.h>
 #include<stdio.h>
 #include<unistd.h>
@@ -5,21 +15,21 @@
 typedef struct block_header {
 	unsigned int size : 29;
 	unsigned int zero : 2;
-	unsigned int alloc : 1;
+	unsigned int alloc : 1; // 1 = alloué et 0 = libre
 } header;
+ 
+header *first = NULL; 
+size_t *end_heap = NULL;
 
-header *first = NULL;
-size_t *end = NULL;//Fin du heap
-
-//aligne la taille sur 32 bits
-//len est en byte
-size_t calcul(size_t len)
-{
+// Aligne la taille sur 32 bits
+static size_t calcul(size_t len) {
 	return len % 4 == 0 ? len : len + 4 - (len % 4);
 }
 
-void insert(header *start, int count, size_t size)
-{
+// Declare le header du nouveau block depuis la position du pointeur start.
+// Si la taille demandée est plus petite que la taille possible, il va créer deux blocks,
+// celui qu'on veut et un un block avec l'espace qui reste.
+static void insert(header *start, int count, size_t size) {
 	start->size = size;
 	start->zero = 0;
 	start->alloc = 1;
@@ -27,6 +37,7 @@ void insert(header *start, int count, size_t size)
 	if((size_t)count == size+4)
 		return;
 
+	//Si on a trop de place
 	size_t reste = (size_t) count - size - 8;
 	start += size/4 + 1;
 	start->size = reste;
@@ -34,12 +45,11 @@ void insert(header *start, int count, size_t size)
 	start->alloc = 0;
 }
 
-//La taille size est en byte
-void *myalloc(size_t size)
-{
-	size = calcul(size); // On aligne sur 32 bits
-	if(first == NULL) //Lors du premier appel, on initialise le heap 
-	{
+// Alloue un block de taille "size" dans le heap et renvoi son adresse
+// Si le heap est trop petit, la methode renvoi NULL.
+void *myalloc(size_t size) {
+	size = calcul(size); // On verifie qu'on est bien sur un multiple de 32 bits
+	if(first == NULL) { //Lors du premier appel, on initialise le heap 
 		first = (header *)sbrk(size);
 		end = sbrk(0);
 		first->size = size;
@@ -47,53 +57,32 @@ void *myalloc(size_t size)
 		first->alloc = 0;
 		return (void *) first;
 	}
+
 	//Navigation dans le heap
 	header *nav = first;
 	int count = 0;
 	header *start = NULL;
-	while((size_t *)nav < end)
-	{
+	while((size_t *)nav < end_heap) {
 		if(count == 0)
-		{
 			start = nav;
-		}
-		if(nav->alloc == 1) //Le block est utilise
-		{
+
+		if(nav->alloc == 1)
 			count = 0;
-		}
-		else 
-		{
+
+		else {
 			count += nav->size + 4;
-			if(count >= size)
-			{
+			if(count >= size) {
 				insert(start, count, size); 
 				return (void *) start + 4;
 			}
 		}
-		nav += nav->size / 4 + 1;
-	}
-	return NULL;
+		nav += nav->size / 4 + 1; // On déplace nav sur le header suivant 
+	} 
+	return NULL;// Echec de l'allocation
 }
 
-void free(void * ptr)
-{
+// Libère la zone pointée
+void free(void *ptr) {
 	ptr -= 4;
 	((header *) ptr)->alloc = 0;
-}
-
-int main(int argc, const char *argv[])
-{
-	myalloc(8);
-	int *first = (int *)myalloc(sizeof(int));
-	int *second = (int *)myalloc(sizeof(int));
-	*first = 1;
-	printf("Le premier est %p valeur -> %d \n", first,*first);
-
-	if(second == NULL)
-		printf("It's work \n");
-	free(first);
-	second = (int *)myalloc(sizeof(int));
-	*second = 2;
-	printf("Le premier est %p valeur -> %d \n", first,*first);
-	printf("Le deuxieme est %p valeur -> %d \n", second, *second);
 }
