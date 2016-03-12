@@ -1,2 +1,3 @@
-void *myalloc(size_t);
-void free(void *);
+void *mymalloc(size_t);
+void myfree(void *);
+void *mycalloc(size_t);
