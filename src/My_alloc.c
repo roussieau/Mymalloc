@@ -47,7 +47,7 @@ static void insert(header *start, int count, size_t size) {
 
 // Alloue un block de taille "size" dans le heap et renvoi son adresse
 // Si le heap est trop petit, la methode renvoi NULL.
-void *myalloc(size_t size) {
+void *mymalloc(size_t size) {
 	size = calcul(size); // On verifie qu'on est bien sur un multiple de 32 bits
 	if(first == NULL) { //Lors du premier appel, on initialise le heap 
 		first = (header *)sbrk(size);
@@ -82,7 +82,19 @@ void *myalloc(size_t size) {
 }
 
 // Libère la zone pointée
-void free(void *ptr) {
+void myfree(void *ptr) {
 	ptr -= 4;
 	((header *) ptr)->alloc = 0;
 }
+
+void *mycalloc(size_t size) {
+	size = calcul(size); // On verifie qu'on est bien sur un multiple de 32 bits
+	size_t *elem = (size_t*)mymalloc(size);
+	if (elem) {
+		for (int i=0; i<size; i++) {
+			elem[i] = 0;
+		}
+	}
+	return (void*)elem;
+}
+
