@@ -30,7 +30,7 @@ static size_t calcul(size_t len) {
 // Si la taille demandée est plus petite que la taille possible, il va créer deux blocks,
 // celui qu'on veut et un un block avec l'espace qui reste.
 static void insert(header *start, int count, size_t size) {
-	start->size = size;
+	start->size = size+4;
 	start->zero = 0;
 	start->alloc = 1;
 
@@ -38,7 +38,7 @@ static void insert(header *start, int count, size_t size) {
 		return;
 
 	//Si on a trop de place
-	size_t reste = (size_t) count - size - 8;
+	size_t reste = (size_t) count - size - 4;
 	start += size/4 + 1;
 	start->size = reste;
 	start->zero = 0;
@@ -52,7 +52,7 @@ void *mymalloc(size_t size) {
 	if(first == NULL) { //Lors du premier appel, on initialise le heap 
 		first = (header *)sbrk(size);
 		end_heap = sbrk(0);
-		first->size = size;
+		first->size = size+4;
 		first->zero = 0;
 		first->alloc = 0;
 		return (void *) first;
@@ -70,13 +70,13 @@ void *mymalloc(size_t size) {
 			count = 0;
 
 		else {
-			count += nav->size + 4;
+			count += nav->size;
 			if(count >= size) {
 				insert(start, count, size); 
 				return (void *) start + 4;
 			}
 		}
-		nav += nav->size / 4 + 1; // On déplace nav sur le header suivant 
+		nav += nav->size / 4; // On déplace nav sur le header suivant 
 	} 
 	return NULL;// Echec de l'allocation
 }
@@ -91,10 +91,8 @@ void *mycalloc(size_t size) {
 	size = calcul(size); // On verifie qu'on est bien sur un multiple de 32 bits
 	size_t *elem = (size_t*)mymalloc(size);
 	if (elem) {
-		for (int i=0; i<size; i++) {
+		for (int i=0; i<size; i++)
 			elem[i] = 0;
-		}
 	}
 	return (void*)elem;
 }
-
