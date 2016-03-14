@@ -1,10 +1,11 @@
-myalloc : Main.o My_alloc.o
-	gcc -Wall -o Main Main.o My_alloc.o
+myalloc : Main.o Mymalloc.o
+	gcc -Wall -o Main Main.o Mymalloc.o
+	./Main
 
-Main.o: Main.c My_alloc.h
+Main.o: Main.c Mymalloc.h
 	gcc -c Main.c
 
-My_alloc.o: My_alloc.c My_alloc.h
+My_alloc.o: Mymalloc.c Mymalloc.h
 	gcc -c My_alloc.c
 
 clean:
