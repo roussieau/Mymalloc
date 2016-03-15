@@ -1,11 +1,12 @@
-# My_alloc
+#
+Mymalloc
 Premier projet du cour LSINF1252 
 Implémentation de myalloc 
 
 #TODO
 - [X] Malloc
-- [ ] Calloc
+- [X] Calloc
 - [X] Free
-- [ ] CUnit
+- [X] CUnit
 - [X] MakeFile
 - [ ] Rapport 
