@@ -3,7 +3,7 @@
 #include "Mymalloc.h"
 
 int init(void) {
-	void *ptr = mymalloc(16);
+	void *ptr = mymalloc(20);
 	if(ptr != NULL) //Initialisation du heap d'une taille de 16 bytes
 		return 0;
 	return 1;
@@ -32,7 +32,17 @@ void freetest(void) {
 	CU_ASSERT_PTR_NOT_NULL(second);
 	myfree(ptr);
 	myfree(second);
+}
 
+void avFrag(void) {
+	long *first = (long *)mymalloc(sizeof(long));
+	int *deux = (int *)mymalloc(sizeof(int));
+	myfree(first);
+	int *trois = (int*)mymalloc(sizeof(int));
+	myfree(deux);
+	long* quattre = (long *)mymalloc(sizeof(long));
+	CU_ASSERT_PTR_NOT_NULL(quattre);
+	myfree(quattre);
 }
 
 void frag(void) {
@@ -65,7 +75,8 @@ int main(int argc, const char *argv[]) {
 	if((NULL == CU_add_test(pSuite, "ajout", ajout)) ||
 			(NULL == CU_add_test(pSuite, "full", full)) ||
 			(NULL == CU_add_test(pSuite, "free", freetest)) ||
-			(NULL == CU_add_test(pSuite, "Fragementation", frag))
+			(NULL == CU_add_test(pSuite, "Fragementation", frag)) ||
+			(NULL == CU_add_test(pSuite, "Fragmentation avance", avFrag))
 			) {
 		CU_cleanup_registry();
 		return CU_get_error();
