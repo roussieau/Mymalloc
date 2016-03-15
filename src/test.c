@@ -1,4 +1,5 @@
 #include <stdlib.h> 
+#include <stdio.h>
 #include <CUnit/Basic.h>
 #include "Mymalloc.h"
 
@@ -34,6 +35,17 @@ void freetest(void) {
 	myfree(second);
 }
 
+void callocTest(void) {
+	int *first = (int *)mymalloc(sizeof(int));
+	int *second= (int *)mymalloc(sizeof(int));
+	*first = 42;
+	myfree(first);
+	int *third = (int *)mycalloc(sizeof(int));
+	CU_ASSERT_EQUAL(*third, 0);
+	myfree(second);
+	myfree(third);
+}
+
 void avFrag(void) {
 	long *first = (long *)mymalloc(sizeof(long));
 	int *deux = (int *)mymalloc(sizeof(int));
@@ -43,6 +55,7 @@ void avFrag(void) {
 	long* quattre = (long *)mymalloc(sizeof(long));
 	CU_ASSERT_PTR_NOT_NULL(quattre);
 	myfree(quattre);
+	myfree(trois);
 }
 
 void frag(void) {
@@ -72,11 +85,12 @@ int main(int argc, const char *argv[]) {
 
 	/* add the tests to the suite */
 	/* NOTE - ORDER IS IMPORTANT - first fct added = first to be run */
-	if((NULL == CU_add_test(pSuite, "ajout", ajout)) ||
-			(NULL == CU_add_test(pSuite, "full", full)) ||
+	if((NULL == CU_add_test(pSuite, "Malloc", ajout)) ||
+			(NULL == CU_add_test(pSuite, "NULL", full)) ||
 			(NULL == CU_add_test(pSuite, "free", freetest)) ||
 			(NULL == CU_add_test(pSuite, "Fragementation", frag)) ||
-			(NULL == CU_add_test(pSuite, "Fragmentation avance", avFrag))
+			(NULL == CU_add_test(pSuite, "Fragmentation avance", avFrag)) ||
+			(NULL == CU_add_test(pSuite, "Calloc", callocTest))
 			) {
 		CU_cleanup_registry();
 		return CU_get_error();

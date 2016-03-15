@@ -83,16 +83,17 @@ void *mymalloc(size_t size) {
 
 // Libère la zone pointée
 void myfree(void *ptr) {
-	ptr -= 4;
-	((header *) ptr)->alloc = 0;
+	if((size_t)ptr-4 < (size_t)end_heap && (size_t)ptr-4 >= (size_t)first) {
+		ptr -= 4;
+		((header *) ptr)->alloc = 0;
+	}
 }
 
 void *mycalloc(size_t size) {
 	size = calcul(size); // On verifie qu'on est bien sur un multiple de 32 bits
-	size_t *elem = (size_t*)mymalloc(size);
-	if (elem) {
-		for (int i=0; i<size; i++)
-			elem[i] = 0;
-	}
-	return (void*)elem;
+	size_t *ptr = (size_t *) mymalloc(size);	
+	if(ptr == NULL)
+		return NULL;
+	*ptr = 0;
+	return ptr;
 }
