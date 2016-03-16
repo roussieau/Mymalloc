@@ -1,7 +1,6 @@
-#
-Mymalloc
+# Mymalloc
 Premier projet du cour LSINF1252 
-Implémentation de myalloc, mycalloc et myfree
+Implémentation de mymalloc, mycalloc et myfree
 
 #TODO
 - [X] Malloc
