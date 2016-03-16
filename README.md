@@ -1,7 +1,7 @@
 #
 Mymalloc
 Premier projet du cour LSINF1252 
-Implémentation de myalloc 
+Implémentation de myalloc, mycalloc et myfree
 
 #TODO
 - [X] Malloc
@@ -9,4 +9,4 @@ Implémentation de myalloc
 - [X] Free
 - [X] CUnit
 - [X] MakeFile
-- [ ] Rapport 
+- [X] Rapport 
