@@ -18,8 +18,8 @@ typedef struct block_header {
 	unsigned int alloc : 1; // 1 = alloué et 0 = libre
 } header;
  
-header *first = NULL; 
-size_t *end_heap = NULL;
+header *first = NULL; // Header du début du heap 
+size_t *end_heap = NULL; // pointer de la fin du heap
 
 // Aligne la taille sur 32 bits
 static size_t calcul(size_t len) {
@@ -46,6 +46,7 @@ static void insert(header *start, int count, size_t size) {
 }
 
 // Alloue un block de taille "size" dans le heap et renvoi son adresse
+// Lors du premier appel, il initialise la taille du heap de la taille donnée en paramètre
 // Si le heap est trop petit, la methode renvoi NULL.
 void *mymalloc(size_t size) {
 	size = calcul(size); // On verifie qu'on est bien sur un multiple de 32 bits
