@@ -1,11 +1,2 @@
 # Mymalloc
-Premier projet du cour LSINF1252 
-Implémentation de mymalloc, mycalloc et myfree
-
-#TODO
-- [X] Malloc
-- [X] Calloc
-- [X] Free
-- [X] CUnit
-- [X] MakeFile
-- [X] Rapport 
+Dans le cadre du cours de systèmes informatiques à l'Université Catholique de Louvain, nous avons été amenés à réimplémenter Malloc, Calloc et free.
